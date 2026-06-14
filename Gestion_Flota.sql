@@ -1,6 +1,14 @@
+-- Elimina las tablas actuales (con CASCADE para borrar dependencias)
+DROP TABLE IF EXISTS alertas CASCADE;
+DROP TABLE IF EXISTS viajes CASCADE;
+DROP TABLE IF EXISTS mantenimientos CASCADE;
+DROP TABLE IF EXISTS inspecciones CASCADE;
+DROP TABLE IF EXISTS vehiculos CASCADE;
+DROP TABLE IF EXISTS choferes CASCADE;
+
 -- Tabla de choferes
 CREATE TABLE choferes (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     nombre TEXT NOT NULL,
     apellido TEXT NOT NULL,
     licencia TEXT UNIQUE NOT NULL,
@@ -12,7 +20,7 @@ CREATE TABLE choferes (
 
 -- Tabla de vehículos
 CREATE TABLE vehiculos (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     placa TEXT UNIQUE NOT NULL,
     tipo TEXT CHECK (tipo IN ('cabezal','plataforma','cisterna','furgon')),
     marca TEXT,
@@ -25,9 +33,9 @@ CREATE TABLE vehiculos (
 
 -- Tabla de inspecciones
 CREATE TABLE inspecciones (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    vehiculo_id UUID REFERENCES vehiculos(id),
-    chofer_id UUID REFERENCES choferes(id),
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    vehiculo_id INT REFERENCES vehiculos(id),
+    chofer_id INT REFERENCES choferes(id),
     fecha_inspeccion TIMESTAMP NOT NULL,
     presion_llantas DECIMAL,
     nivel_aceite TEXT CHECK (nivel_aceite IN ('optimo','bajo','critico')),
@@ -42,8 +50,8 @@ CREATE TABLE inspecciones (
 
 -- Tabla de mantenimientos
 CREATE TABLE mantenimientos (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    vehiculo_id UUID REFERENCES vehiculos(id),
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    vehiculo_id INT REFERENCES vehiculos(id),
     tipo TEXT,
     descripcion TEXT,
     kilometraje DECIMAL,
@@ -55,10 +63,10 @@ CREATE TABLE mantenimientos (
 
 -- Tabla de viajes
 CREATE TABLE viajes (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    vehiculo_id UUID REFERENCES vehiculos(id),
-    chofer_id UUID REFERENCES choferes(id),
-    inspeccion_id UUID REFERENCES inspecciones(id),
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    vehiculo_id INT REFERENCES vehiculos(id),
+    chofer_id INT REFERENCES choferes(id),
+    inspeccion_id INT REFERENCES inspecciones(id),
     origen TEXT NOT NULL,
     destino TEXT NOT NULL,
     distancia_km DECIMAL,
@@ -71,11 +79,12 @@ CREATE TABLE viajes (
 
 -- Tabla de alertas
 CREATE TABLE alertas (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    vehiculo_id UUID REFERENCES vehiculos(id),
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    vehiculo_id INT REFERENCES vehiculos(id),
     tipo TEXT,
     severidad TEXT CHECK (severidad IN ('info','advertencia','critica')),
     mensaje TEXT,
     resuelta BOOLEAN DEFAULT FALSE,
     creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
