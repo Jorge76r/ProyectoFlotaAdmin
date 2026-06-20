@@ -3,121 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Flota</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Control Preventivo de Flotas</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Consola de Gestión de Flota</h1>
+            <h1>Sistema Digital de Control Preventivo para Flotas</h1>
         </header>
 
         <nav>
-            <button onclick="mostrarSeccion('dashboard')">📊 Dashboard</button>
-            <button onclick="mostrarSeccion('vehiculos')">🚗 Vehículos</button>
-            <button onclick="mostrarSeccion('choferes')">👤 Choferes</button>
-            <button onclick="mostrarSeccion('inspecciones')">🔍 Inspecciones</button>
-            <button onclick="mostrarSeccion('alertas')">🔔 Alertas</button>
+            <button id="btn-dashboard" class="active" onclick="cambiarPestana('dashboard')">Dashboard</button>
+            <button id="btn-vehiculos" onclick="cambiarPestana('vehiculos')">Gestión de Vehículos</button>
+            <button id="btn-mantenimiento" onclick="cambiarPestana('mantenimiento')">Mantenimiento Preventivo</button>
+            <button id="btn-alertas" onclick="cambiarPestana('alertas')">Alertas Críticas</button>
         </nav>
 
-        <main id="contenido">
-            <div id="dashboard">
-                <h2>📊 Dashboard</h2>
-                <div class="stats-grid" id="stats">
-                    <div class="stat-card">
-                        <h3>Vehículos</h3>
-                        <p id="total-vehiculos">0</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Choferes</h3>
-                        <p id="total-choferes">0</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Alertas</h3>
-                        <p id="total-alertas">0</p>
-                    </div>
+        <section id="sec-dashboard">
+            <h2>Vista General de la Flota</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Vehículos</h3>
+                    <p id="total-unidades">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>En Viaje</h3>
+                    <p id="total-viaje" style="color: #1e40af;">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>En Mantenimiento</h3>
+                    <p id="total-taller" style="color: #92400e;">0</p>
                 </div>
             </div>
+        </section>
 
-            <div id="vehiculos" class="hidden">
-                <h2>🚗 Vehículos</h2>
-                <button onclick="mostrarFormulario('vehiculo')" class="btn-primary">+ Agregar Vehículo</button>
-                <div id="form-vehiculo" class="form-container hidden">
-                    <h3>Nuevo Vehículo</h3>
-                    <form id="vehiculoForm">
-                        <input type="text" id="v-placa" placeholder="Placa" required>
-                        <input type="text" id="v-tipo" placeholder="Tipo (cabezal/furgón/etc)" required>
-                        <input type="text" id="v-marca" placeholder="Marca" required>
-                        <input type="text" id="v-modelo" placeholder="Modelo" required>
-                        <input type="number" id="v-anio" placeholder="Año" required>
-                        <input type="number" id="v-kilometraje" placeholder="Kilometraje">
-                        <select id="v-estado">
-                            <option value="disponible">Disponible</option>
-                            <option value="en_viaje">En Viaje</option>
-                            <option value="en_mantenimiento">En Mantenimiento</option>
-                            <option value="fuera_de_servicio">Fuera de Servicio</option>
-                        </select>
-                        <button type="submit">Guardar</button>
-                        <button type="button" onclick="ocultarFormulario('vehiculo')">Cancelar</button>
-                    </form>
-                </div>
-                <div id="lista-vehiculos"></div>
+        <section id="sec-vehiculos" class="hidden">
+            <h2>Control de Unidades de Carga</h2>
+            <div class="form-container">
+                <h3>Registrar Nuevo Camión</h3>
+                <form id="form-vehiculo">
+                    <input type="text" id="placa" placeholder="Número de Placa (ej. HAA 1234)" required>
+                    <input type="text" id="modelo" placeholder="Modelo / Marca (ej. Freightliner)" required>
+                    <input type="number" id="kilometraje" placeholder="Kilometraje Actual" required>
+                    <select id="estado" required>
+                        <option value="disponible">Disponible</option>
+                        <option value="en_viaje">En Viaje</option>
+                        <option value="en_mantenimiento">En Mantenimiento</option>
+                        <option value="fuera_de_servicio">Fuera de Servicio</option>
+                    </select>
+                    <button type="submit">Guardar Unidad</button>
+                </form>
             </div>
 
-            <div id="choferes" class="hidden">
-                <h2>👤 Choferes</h2>
-                <button onclick="mostrarFormulario('chofer')" class="btn-primary">+ Agregar Chofer</button>
-                <div id="form-chofer" class="form-container hidden">
-                    <h3>Nuevo Chofer</h3>
-                    <form id="choferForm">
-                        <input type="text" id="c-nombre" placeholder="Nombre" required>
-                        <input type="text" id="c-apellido" placeholder="Apellido" required>
-                        <input type="text" id="c-licencia" placeholder="Licencia" required>
-                        <input type="text" id="c-telefono" placeholder="Teléfono">
-                        <input type="email" id="c-email" placeholder="Email">
-                        <select id="c-activo">
-                            <option value="true">Activo</option>
-                            <option value="false">Inactivo</option>
-                        </select>
-                        <button type="submit">Guardar</button>
-                        <button type="button" onclick="ocultarFormulario('chofer')">Cancelar</button>
-                    </form>
-                </div>
-                <div id="lista-choferes"></div>
-            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Placa</th>
+                        <th>Modelo / Marca</th>
+                        <th>Kilometraje</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-vehiculos">
+                    </tbody>
+            </table>
+        </section>
 
-            <div id="inspecciones" class="hidden">
-                <h2>🔍 Inspecciones</h2>
-                <button onclick="mostrarFormulario('inspeccion')" class="btn-primary">+ Nueva Inspección</button>
-                <div id="form-inspeccion" class="form-container hidden">
-                    <h3>Nueva Inspección</h3>
-                    <form id="inspeccionForm">
-                        <input type="number" id="i-vehiculo" placeholder="ID Vehículo" required>
-                        <input type="number" id="i-chofer" placeholder="ID Chofer" required>
-                        <input type="number" id="i-presion" placeholder="Presión llantas (PSI)" required>
-                        <input type="text" id="i-aceite" placeholder="Nivel aceite (optimo/bajo/critico)" required>
-                        <input type="text" id="i-hidraulico" placeholder="Nivel hidráulico (optimo/bajo)" required>
-                        <input type="text" id="i-refrigerante" placeholder="Nivel refrigerante (optimo/bajo)" required>
-                        <input type="text" id="i-frenos" placeholder="Estado frenos (bueno/regular/malo)" required>
-                        <input type="number" id="i-kilometraje" placeholder="Kilometraje actual" required>
-                        <input type="text" id="i-observaciones" placeholder="Observaciones">
-                        <button type="submit">Guardar</button>
-                        <button type="button" onclick="ocultarFormulario('inspeccion')">Cancelar</button>
-                    </form>
-                </div>
-                <div id="lista-inspecciones"></div>
-            </div>
+        <section id="sec-mantenimiento" class="hidden">
+            <h2>Órdenes de Trabajo Técnico</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Vehículo</th>
+                        <th>Descripción del Servicio</th>
+                        <th>Fecha de Revisión</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>HAA 2589</td>
+                        <td>Cambio preventivo de aceite de motor</td>
+                        <td>20/06/2026</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
 
-            <div id="alertas" class="hidden">
-                <h2>🔔 Alertas</h2>
-                <div id="lista-alertas"></div>
-            </div>
-        </main>
+        <section id="sec-alertas" class="hidden">
+            <h2>Alertas de Kilometraje Extremo (> 50,000 km)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Placa</th>
+                        <th>Nivel de Riesgo</th>
+                        <th>Acción Sugerida</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </section>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="app.js"></script>
 </body>
 </html>
