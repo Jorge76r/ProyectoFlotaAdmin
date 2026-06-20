@@ -1,46 +1,42 @@
+const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+const morgan = require('morgan');
 require('dotenv').config();
-const express      = require('express');
-const cors         = require('cors');
-const routes       = require('./routes');
+
+const routes = require('./routes');
 const errorHandler = require('./middleware/errorHandler');
 
-const app  = express();
+const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ── Middleware global ────────────────────────
+// Middlewares
+app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(morgan('dev'));
 
-// ── Logging básico ───────────────────────────
-app.use((req, _res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
-  next();
+// Ruta de salud
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'API de Gestión de Flota',
+    version: '1.0.0',
+    endpoints: '/api',
+    health: '/api/health'
+  });
 });
 
-// ── Rutas ────────────────────────────────────
+// Rutas de la API
 app.use('/api', routes);
 
-// ── 404 ──────────────────────────────────────
-app.use((_req, res) => {
-  res.status(404).json({ success: false, error: 'Ruta no encontrada' });
-});
-
-// ── Error handler ────────────────────────────
+// Middleware de errores (siempre al final)
 app.use(errorHandler);
 
-// ── Arranque ─────────────────────────────────
+// Iniciar servidor
 app.listen(PORT, () => {
-  console.log(`\n🚛  Sistema de Flotas — API corriendo en http://localhost:${PORT}`);
-  console.log(`📋  Endpoints disponibles:`);
-  console.log(`    GET  /api/health`);
-  console.log(`    CRUD /api/inspecciones`);
-  console.log(`    CRUD /api/vehiculos`);
-  console.log(`    CRUD /api/choferes`);
-  console.log(`    CRUD /api/viajes`);
-  console.log(`    GET  /api/alertas`);
-  console.log(`    GET  /api/consultas/vehiculos-no-aptos`);
-  console.log(`    GET  /api/consultas/eficiencia-choferes\n`);
+  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`📋 API disponible en http://localhost:${PORT}/api`);
+  console.log(`💚 Health check en http://localhost:${PORT}/api/health`);
 });
-
-module.exports = app;
