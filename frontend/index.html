@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Flota</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚛 Gestión de Flota</h1>
+        </header>
+
+        <!-- Menú de navegación -->
+        <nav>
+            <button onclick="mostrarSeccion('dashboard')">📊 Dashboard</button>
+            <button onclick="mostrarSeccion('vehiculos')">🚗 Vehículos</button>
+            <button onclick="mostrarSeccion('choferes')">👤 Choferes</button>
+            <button onclick="mostrarSeccion('inspecciones')">🔍 Inspecciones</button>
+            <button onclick="mostrarSeccion('alertas')">🔔 Alertas</button>
+        </nav>
+
+        <!-- Contenido -->
+        <main id="contenido">
+            <div id="dashboard">
+                <h2>📊 Dashboard</h2>
+                <div class="stats-grid" id="stats">
+                    <div class="stat-card">
+                        <h3>Vehículos</h3>
+                        <p id="total-vehiculos">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Choferes</h3>
+                        <p id="total-choferes">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Alertas</h3>
+                        <p id="total-alertas">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="vehiculos" class="hidden">
+                <h2>🚗 Vehículos</h2>
+                <button onclick="mostrarFormulario('vehiculo')" class="btn-primary">+ Agregar Vehículo</button>
+                <div id="form-vehiculo" class="form-container hidden">
+                    <h3>Nuevo Vehículo</h3>
+                    <form id="vehiculoForm">
+                        <input type="text" id="v-placa" placeholder="Placa" required>
+                        <input type="text" id="v-tipo" placeholder="Tipo (cabezal/furgón/etc)" required>
+                        <input type="text" id="v-marca" placeholder="Marca" required>
+                        <input type="text" id="v-modelo" placeholder="Modelo" required>
+                        <input type="number" id="v-anio" placeholder="Año" required>
+                        <input type="number" id="v-kilometraje" placeholder="Kilometraje">
+                        <select id="v-estado">
+                            <option value="disponible">Disponible</option>
+                            <option value="en_viaje">En Viaje</option>
+                            <option value="en_mantenimiento">En Mantenimiento</option>
+                            <option value="fuera_de_servicio">Fuera de Servicio</option>
+                        </select>
+                        <button type="submit">Guardar</button>
+                        <button type="button" onclick="ocultarFormulario('vehiculo')">Cancelar</button>
+                    </form>
+                </div>
+                <div id="lista-vehiculos"></div>
+            </div>
+
+            <div id="choferes" class="hidden">
+                <h2>👤 Choferes</h2>
+                <button onclick="mostrarFormulario('chofer')" class="btn-primary">+ Agregar Chofer</button>
+                <div id="form-chofer" class="form-container hidden">
+                    <h3>Nuevo Chofer</h3>
+                    <form id="choferForm">
+                        <input type="text" id="c-nombre" placeholder="Nombre" required>
+                        <input type="text" id="c-apellido" placeholder="Apellido" required>
+                        <input type="text" id="c-licencia" placeholder="Licencia" required>
+                        <input type="text" id="c-telefono" placeholder="Teléfono">
+                        <input type="email" id="c-email" placeholder="Email">
+                        <select id="c-activo">
+                            <option value="true">Activo</option>
+                            <option value="false">Inactivo</option>
+                        </select>
+                        <button type="submit">Guardar</button>
+                        <button type="button" onclick="ocultarFormulario('chofer')">Cancelar</button>
+                    </form>
+                </div>
+                <div id="lista-choferes"></div>
+            </div>
+
+            <div id="inspecciones" class="hidden">
+                <h2>🔍 Inspecciones</h2>
+                <button onclick="mostrarFormulario('inspeccion')" class="btn-primary">+ Nueva Inspección</button>
+                <div id="form-inspeccion" class="form-container hidden">
+                    <h3>Nueva Inspección</h3>
+                    <form id="inspeccionForm">
+                        <input type="number" id="i-vehiculo" placeholder="ID Vehículo" required>
+                        <input type="number" id="i-chofer" placeholder="ID Chofer" required>
+                        <input type="number" id="i-presion" placeholder="Presión llantas (PSI)" required>
+                        <input type="text" id="i-aceite" placeholder="Nivel aceite (optimo/bajo/critico)" required>
+                        <input type="text" id="i-hidraulico" placeholder="Nivel hidráulico (optimo/bajo)" required>
+                        <input type="text" id="i-refrigerante" placeholder="Nivel refrigerante (optimo/bajo)" required>
+                        <input type="text" id="i-frenos" placeholder="Estado frenos (bueno/regular/malo)" required>
+                        <input type="number" id="i-kilometraje" placeholder="Kilometraje actual" required>
+                        <input type="text" id="i-observaciones" placeholder="Observaciones">
+                        <button type="submit">Guardar</button>
+                        <button type="button" onclick="ocultarFormulario('inspeccion')">Cancelar</button>
+                    </form>
+                </div>
+                <div id="lista-inspecciones"></div>
+            </div>
+
+            <div id="alertas" class="hidden">
+                <h2>🔔 Alertas</h2>
+                <div id="lista-alertas"></div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
